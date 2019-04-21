@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useEffect } from "react";
 import Navigation from "./Navigation.js";
 import Sheet from "./Sheet.js";
 import "./App.css";
-import { stat } from "fs";
+//import { stat } from "fs";
 
 function appReducer(state, action) {
   switch (action.type) {
@@ -18,6 +18,19 @@ function appReducer(state, action) {
       } else {
         return state;
       }
+    }
+    case "changeSheetItems":{
+      if(action.payload['sheet'] === "WORLD")
+      {
+        return{
+          ...state,
+          worldItems: action.payload.items
+        }
+      }
+      else{
+        return state;
+      }
+
     }
     case "toggleAMP": {
       if (action.payload === undefined)
@@ -38,12 +51,11 @@ function appReducer(state, action) {
           ...state,
           getImages: state["getImages"] === "true" ? "false" : "true"
         };
-      }
-      else{
-        return{
-          ...state, 
+      } else {
+        return {
+          ...state,
           getImages: action.payload
-        }
+        };
       }
     }
 
@@ -58,6 +70,7 @@ export default function App() {
   const [state, dispatch] = useReducer(appReducer, {
     currentSheet: " ",
     offPhraseList: [],
+
     getAMP: "true",
     getImages: "false",
     getDescription: "true"
@@ -93,7 +106,37 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log(`${JSON.stringify(state)} 👈 latest global state`);
+    if (state["currentSheet"] === "WORLD") {
+      let queryString = `http://localhost:2345/graphql?query=query
+      {
+        articles(offPhrases:${JSON.stringify(state["offPhraseList"])}) {
+          title
+          ${state["getAMP"] === "true" ? "ampURL" : "url"}
+          ${state["getImages"] === "true" ? "image" : ""}
+          publisher
+          uid
+          matchid
+          matchid
+        }
+      }`;
+      console.log(queryString);
+      
+      fetch(queryString)
+      .then(res => res.json())
+      .then(worldItems => {
+        dispatch({
+          type: "changeSheetItems",
+          payload: {
+            sheet: "WORLD",
+            items: worldItems['data']['articles']
+          }
+        })
+      });
+    }// end of if (state["currentSheet"] === "WORLD") {
+  }, [state["currentSheet"]]);
+
+  useEffect(() => {
+    //console.log(`${JSON.stringify(state)} 👈 latest global state`);
     localStorage.setItem("currentSheet", state["currentSheet"]);
     localStorage.setItem("getAMP", state["getAMP"]);
     localStorage.setItem("getImages", state["getImages"]);
@@ -108,6 +151,7 @@ export default function App() {
           currentSheet={state["currentSheet"]}
           offPhraseList={state["offPhraseList"]}
           getAMP={state["getAMP"]}
+          worldItems={state['worldItems']}
           getDescription={state["getDescription"]}
           getImages={state["getImages"]}
         />

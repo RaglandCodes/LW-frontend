@@ -26,7 +26,7 @@ export default function Settings({
   }, [localState]);
 
   const handleOffPhraseAdd = () => {
-    if (localState.newOffPhrase.length < 3) {
+    if (localState.newOffPhrase.length < 2) {
       setLocalState({
         ...localState,
         offPhraseWarnings: "Enter a longer phrase"

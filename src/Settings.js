@@ -11,12 +11,21 @@ export default function Settings({
   //OP for Off Phrase
   let renderOPList = offPhraseList.map(OPitem => (
     <div key={OPitem} className="OP-button">
+      <button
+        className="removeOP"
+        onClick={() => dispatch({ type: "removeOffPhrase", payload: OPitem })}
+      >
+        {" "}
+        X{" "}
+      </button>
       {OPitem}
     </div>
   ));
 
   const dispatch = useContext(Context);
   const [localState, setLocalState] = useState({
+    // local state is used only to handle the on change on OP input. where OP = off phrase
+    // other settings are directly sent to global state via dispatch
     newOffPhrase: "",
     offPhraseWarnings: ""
   });
@@ -37,7 +46,6 @@ export default function Settings({
     }
   };
 
-  
   const verifyOffPhraseInput = e => {
     let currentInput = e.target.value.toLowerCase();
     if (
@@ -59,7 +67,7 @@ export default function Settings({
 
     return currentInput;
   };
-  // dispatch({type: "toggleImages", payload: this.checked.toString()})
+  
   return (
     <div>
       This is the settings page
@@ -83,12 +91,24 @@ export default function Settings({
         <input
           type="checkbox"
           checked={getImages === "true" ? true : false}
-          onChange={() =>  dispatch({type:"toggleImages"})}
+          onChange={() => dispatch({ type: "toggleImages" })}
+        />
+      </div>
+      <div className="setting-box">
+        Show descriptions{" "}
+        <input
+          type="checkbox"
+          checked={getDescription === "true" ? true : false}
+          onChange={() => dispatch({ type: "toggleDescription" })}
         />
       </div>
       <div className="setting-box">
         Get AMP link{" "}
-        <input type="checkbox" checked={getAMP === "true" ? true : false} onChange={() =>  dispatch({type:"toggleAMP"})} />
+        <input
+          type="checkbox"
+          checked={getAMP === "true" ? true : false}
+          onChange={() => dispatch({ type: "toggleAMP" })}
+        />
       </div>
     </div>
   );

@@ -19,18 +19,34 @@ function appReducer(state, action) {
         return state;
       }
     }
-    case "changeSheetItems":{
-      if(action.payload['sheet'] === "WORLD")
-      {
-        return{
+    case "removeOffPhrase": {
+      return {
+        ...state,
+        offPhraseList: state.offPhraseList.filter(p => p !== action["payload"])
+      };
+    }
+    case "changeSheetItems": {
+      if (action.payload["sheet"] === "WORLD") {
+        return {
           ...state,
           worldItems: action.payload.items
-        }
-      }
-      else{
+        };
+      } else {
         return state;
       }
-
+    }
+    case "toggleDescription": {
+      if (action.payload === undefined)
+        return {
+          ...state,
+          getDescription: state["getDescription"] === "true" ? "false" : "true"
+        };
+      else {
+        return {
+          ...state,
+          getDescription: action.payload
+        };
+      }
     }
     case "toggleAMP": {
       if (action.payload === undefined)
@@ -91,6 +107,11 @@ export default function App() {
       });
 
       dispatch({
+        type: "toggleDescription",
+        payload: localStorage.getItem("getDescription")
+      });
+
+      dispatch({
         type: "toggleAMP",
         payload: localStorage.getItem("getAMP")
       });
@@ -107,7 +128,9 @@ export default function App() {
 
   useEffect(() => {
     if (state["currentSheet"] === "WORLD") {
-      let queryString = `http://localhost:2345/graphql?query=query
+      //let queryString = `http://localhost:2345/graphql?query=query
+      let queryString = `https://lw-back.glitch.me/graphql?query=query
+           
       {
         articles(offPhrases:${JSON.stringify(state["offPhraseList"])}) {
           title
@@ -115,28 +138,32 @@ export default function App() {
           ${state["getImages"] === "true" ? "image" : ""}
           publisher
           uid
-          matchid
+          minutesPassed
+          publisher
+          ${state["getDescription"] === "true" ? "description" : ""}
+          
+          type
           matchid
         }
       }`;
       console.log(queryString);
-      
+
       fetch(queryString)
-      .then(res => res.json())
-      .then(worldItems => {
-        dispatch({
-          type: "changeSheetItems",
-          payload: {
-            sheet: "WORLD",
-            items: worldItems['data']['articles']
-          }
-        })
-      });
-    }// end of if (state["currentSheet"] === "WORLD") {
+        .then(res => res.json())
+        .then(worldItems => {
+          dispatch({
+            type: "changeSheetItems",
+            payload: {
+              sheet: "WORLD",
+              items: worldItems["data"]["articles"]
+            }
+          });
+        });
+    } // end of if (state["currentSheet"] === "WORLD") {
   }, [state["currentSheet"]]);
 
   useEffect(() => {
-    //console.log(`${JSON.stringify(state)} 👈 latest global state`);
+    console.log(`${JSON.stringify(state)} 👈 latest global state`);
     localStorage.setItem("currentSheet", state["currentSheet"]);
     localStorage.setItem("getAMP", state["getAMP"]);
     localStorage.setItem("getImages", state["getImages"]);
@@ -151,11 +178,11 @@ export default function App() {
           currentSheet={state["currentSheet"]}
           offPhraseList={state["offPhraseList"]}
           getAMP={state["getAMP"]}
-          worldItems={state['worldItems']}
+          worldItems={state["worldItems"]}
           getDescription={state["getDescription"]}
           getImages={state["getImages"]}
         />
-        <Navigation />
+        <Navigation currentSheet={state["currentSheet"]} />
       </div>
     </Context.Provider>
   );

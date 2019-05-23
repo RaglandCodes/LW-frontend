@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import SingleBox from "./SingleBox";
+import MatchBox from "./MatchBox";
 import Settings from "./Settings";
+import VideoBox from "./VideoBox";
 
 export default function Sheet({
   currentSheet,
@@ -35,19 +37,46 @@ export default function Sheet({
     useEffect(() => {
       //renderWorldItems = worldItems.map(word => <div>{word["title"]}</div>);
       if (worldItems !== undefined) {
-        //console.log(JSON.stringify(worldItems));
+        let matchedItems = worldItems.filter(w => w["matchid"] !== "0");
+        let singleItems = worldItems.filter(w => w["matchid"] == "0");
+        let matchIDs = matchedItems.map(w => w["matchid"]);
+        let uniqueMatchIDs = [...new Set(matchIDs)];
 
-        let renderWorldItems = worldItems.map(word => {
-          return (
-            <SingleBox
-              title={word["title"]}
-              image={word["image"]}
-              link={word["url"] === undefined ? word["ampURL"] : word["url"]}
-              key={word["uid"]}
-            />
-          );
+        let renderMatchedItems = [];
+
+        for (const id of uniqueMatchIDs) {
+          let thisItmes = matchedItems.filter(w => w["matchid"] === id);
+          
+
+          renderMatchedItems.push(<MatchBox matchList={thisItmes} key={id} />);
+        }
+
+        let renderSingleItems = singleItems.map(word => {
+          if (word["type"] === "text") {
+            
+            
+            return (
+              <SingleBox
+                title={word["title"]}
+                image={word["image"]}
+                link={word["url"] === undefined ? word["ampURL"] : word["url"]}
+                description={word['description']}
+                publisher={word['publisher']}
+                minutesPassed={word['minutesPassed']}
+                key={word["uid"]}
+              />
+            );
+          } else {
+            return (
+              <VideoBox
+                title={word["title"]}
+                videoID={word["uid"]}
+                key={word["uid"]}
+              />
+            );
+          }
         });
-        setNewsArticles(renderWorldItems);
+        setNewsArticles(renderMatchedItems.concat(renderSingleItems));
       }
     }, [worldItems]);
 

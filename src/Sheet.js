@@ -9,10 +9,28 @@ export default function Sheet({
   currentSheet,
   offPhraseList,
   getAMP,
+  darkTheme,
   worldItems,
   getDescription,
   getImages
-}) {
+}) 
+{
+
+  let boxHeight = "full";
+  
+  if(getDescription == 'false' && getImages =='false')
+  {
+    boxHeight = "title"
+  } 
+  else if(getImages == 'false')
+  {
+    boxHeight = "tite-desc"
+  }
+  else if(getDescription == 'false' && getImages == 'true')
+  {
+    boxHeight = "title-image"
+  }
+
   if (currentSheet === "SETTINGS") {
     return (
       <div>
@@ -24,10 +42,14 @@ export default function Sheet({
           getAMP={getAMP}
           getDescription={getDescription}
           getImages={getImages}
+          darkTheme = {darkTheme}
         />
       </div>
     );
   } else {
+
+
+
     const [renderNewsArticles, setNewsArticles] = useState(
       <div>Loading please wait </div>
     );
@@ -35,7 +57,6 @@ export default function Sheet({
     //setNewsArticles(<div>Loading please wait</div>);
 
     useEffect(() => {
-      //renderWorldItems = worldItems.map(word => <div>{word["title"]}</div>);
       if (worldItems !== undefined) {
         let matchedItems = worldItems.filter(w => w["matchid"] !== "0");
         let singleItems = worldItems.filter(w => w["matchid"] == "0");
@@ -46,23 +67,29 @@ export default function Sheet({
 
         for (const id of uniqueMatchIDs) {
           let thisItmes = matchedItems.filter(w => w["matchid"] === id);
-          
-
-          renderMatchedItems.push(<MatchBox matchList={thisItmes} key={id} />);
+          renderMatchedItems.push(
+            <MatchBox
+              matchList={thisItmes}
+              getDescription={getDescription}
+              getImages={getImages}
+              darkTheme={darkTheme}
+              boxHeight={boxHeight}
+              key={id}
+            />
+          );
         }
 
         let renderSingleItems = singleItems.map(word => {
           if (word["type"] === "text") {
-            
-            
             return (
               <SingleBox
                 title={word["title"]}
                 image={word["image"]}
                 link={word["url"] === undefined ? word["ampURL"] : word["url"]}
-                description={word['description']}
-                publisher={word['publisher']}
-                minutesPassed={word['minutesPassed']}
+                description={word["description"]}
+                publisher={word["publisher"]}
+                minutesPassed={word["minutesPassed"]}
+                boxHeight={boxHeight}
                 key={word["uid"]}
               />
             );
@@ -71,6 +98,11 @@ export default function Sheet({
               <VideoBox
                 title={word["title"]}
                 videoID={word["uid"]}
+                getImages={getImages}
+                displayTime={word["displayTime"]}
+                publisher={word["publisher"]}
+                description={word["description"]}
+                boxHeight={boxHeight}
                 key={word["uid"]}
               />
             );
@@ -82,7 +114,7 @@ export default function Sheet({
 
     return (
       <div>
-        <div className="top-box">
+        <div className= "top-box" >
           {currentSheet === undefined ? "Loading !!" : currentSheet}
         </div>
         {renderNewsArticles}

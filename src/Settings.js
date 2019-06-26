@@ -6,7 +6,8 @@ export default function Settings({
   offPhraseList,
   getAMP,
   getDescription,
-  getImages
+  getImages,
+  darkTheme
 }) {
   //OP for Off Phrase
   let renderOPList = offPhraseList.map(OPitem => (
@@ -67,10 +68,9 @@ export default function Settings({
 
     return currentInput;
   };
-  
+
   return (
-    <div>
-      This is the settings page
+    <div style={{ width: "95%", maxWidth: "600px", margin: "auto" }}>
       <br />
       <div className="setting-box">
         <input
@@ -85,31 +85,59 @@ export default function Settings({
           {localState.offPhraseWarnings}
           {renderOPList}
         </span>
+        <div className="setting-desc">
+          Use this option if you aren't interested in a particular topic. News
+          articles containing the words you enter in titles/description will not
+          be shown
+        </div>
       </div>
       <div className="setting-box">
-        Show Images{" "}
+        <div className="setting-label">Show Images </div>
         <input
           type="checkbox"
+          className="setting-checkbox"
           checked={getImages === "true" ? true : false}
           onChange={() => dispatch({ type: "toggleImages" })}
         />
+        <div className="setting-desc">
+          Leaving this unchecked will not show images or video previews
+        </div>
       </div>
       <div className="setting-box">
-        Show descriptions{" "}
+        <div className="setting-label">Show descriptions </div>
         <input
           type="checkbox"
+          className="setting-checkbox"
           checked={getDescription === "true" ? true : false}
           onChange={() => dispatch({ type: "toggleDescription" })}
         />
       </div>
       <div className="setting-box">
-        Get AMP link{" "}
+        <div className="setting-label">Get AMP link </div>
         <input
+        className="setting-checkbox"
           type="checkbox"
           checked={getAMP === "true" ? true : false}
           onChange={() => dispatch({ type: "toggleAMP" })}
         />
+        <div className="setting-desc">
+          Checking this will get you the AMP link of the story when available.
+          AMP pages tend to load faster. Most browsers provide a way to revert
+          to the full page from the AMP page.
+        </div>
       </div>
+      <div className="setting-box">
+        <div className="setting-label">Dark Theme </div>
+        <input
+          type="checkbox"
+          className="setting-checkbox"
+          checked={darkTheme === "true" ? true : false}
+          onChange={() => dispatch({ type: "toggleDarkTheme" })}
+        />
+        <div className="setting-desc" />
+        <br/><br/><br/><br/>
+      </div>
+    
     </div>
   );
 }

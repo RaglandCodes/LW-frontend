@@ -7,11 +7,35 @@ export default function SingleBox({
   link,
   description,
   publisher,
-  minutesPassed
+  minutesPassed,
+  boxHeight
 }) {
   //console.log(`${description === undefined? title.concat(publisher):"" } 👈 descs sb undefined`);
+  // TODO use data from backend
+
+  let pictureBox = React.createRef();
+  let wordBox = React.createRef();
+  // let wordTitle = React.createRef();
+  useEffect(() => {
+    console.log(`${pictureBox.current.clientHeight} 👈 pic height`);
+    if (boxHeight === "title-image") wordBox.current.scroll(0, 100);
+  }, []);
 
   let displayTime = "";
+
+  // let boxHeight = "full"
+  //   if(!description && !image)
+  //   {
+  //     boxHeight = "title"
+  //   }
+  //   else if(!image)
+  //   {
+  //     boxHeight = "tite-desc"
+  //   }
+  //   else if(!description)
+  //   {
+  //     boxHeight = "title-image"
+  //   }
 
   minutesPassed = parseInt(minutesPassed);
   if (!(minutesPassed > 0)) {
@@ -27,12 +51,17 @@ export default function SingleBox({
     } ago`;
   }
 
-  console.log(`${displayTime} 👈 displaytome sb`);
+  //console.log(`${displayTime} 👈 displaytome sb`);
 
   return (
-    <div className="single-box" onClick={() => window.open(link)}>
+    <div
+      ref={wordBox}
+      className={`single-box ${boxHeight}`}
+      onClick={() => window.open(link)}
+    >
       {image === undefined ? null : (
         <div
+          ref={pictureBox}
           className={`picture-box ${image === undefined ? "hidden-box" : null}`}
         >
           <img src={image} className="word-image" alt="📸📸" />
@@ -44,7 +73,9 @@ export default function SingleBox({
         <div className="word-time">{displayTime}</div>
       </div>
       <div className="row-three">
-        <div className="word-title">{title}</div>
+        <div className="word-title" >
+          {title}
+        </div>
         <div className="word-description">{description}</div>
       </div>
     </div>

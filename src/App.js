@@ -61,6 +61,19 @@ function appReducer(state, action) {
         };
       }
     }
+    case "toggleDarkTheme": {
+      if (action.payload === undefined)
+        return {
+          ...state,
+          darkTheme: state["darkTheme"] === "true" ? "false" : "true"
+        };
+      else {
+        return {
+          ...state,
+          darkTheme: action.payload
+        };
+      }
+    }
     case "toggleImages": {
       if (action.payload === undefined) {
         return {
@@ -88,6 +101,7 @@ export default function App() {
     offPhraseList: [],
 
     getAMP: "true",
+    darkTheme: "false",
     getImages: "false",
     getDescription: "true"
   });
@@ -116,6 +130,10 @@ export default function App() {
         payload: localStorage.getItem("getAMP")
       });
 
+      dispatch({
+        type: "toggleDarkTheme",
+        payload: localStorage.getItem("darkTheme")
+      });
       if (localStorage.getItem("offPhraseList").length > 0)
         localStorage
           .getItem("offPhraseList")
@@ -130,7 +148,6 @@ export default function App() {
     if (state["currentSheet"] === "WORLD") {
       //let queryString = `http://localhost:2345/graphql?query=query
       let queryString = `https://lw-back.glitch.me/graphql?query=query
-           
       {
         articles(offPhrases:${JSON.stringify(state["offPhraseList"])}) {
           title
@@ -141,7 +158,7 @@ export default function App() {
           minutesPassed
           publisher
           ${state["getDescription"] === "true" ? "description" : ""}
-          
+          displayTime
           type
           matchid
         }
@@ -166,6 +183,7 @@ export default function App() {
     console.log(`${JSON.stringify(state)} 👈 latest global state`);
     localStorage.setItem("currentSheet", state["currentSheet"]);
     localStorage.setItem("getAMP", state["getAMP"]);
+    localStorage.setItem("darkTheme", state["darkTheme"]);
     localStorage.setItem("getImages", state["getImages"]);
     localStorage.setItem("getDescription", state["getDescription"]);
     localStorage.setItem("offPhraseList", state["offPhraseList"].join("&&&"));
@@ -173,14 +191,16 @@ export default function App() {
 
   return (
     <Context.Provider value={dispatch}>
-      <div className="App">
+      <div className= {`App ${state['darkTheme'] == 'true'? 'dark-theme-app' : 'light-theme-app'}`}>
         <Sheet
           currentSheet={state["currentSheet"]}
           offPhraseList={state["offPhraseList"]}
           getAMP={state["getAMP"]}
+          darkTheme={state["darkTheme"]}
           worldItems={state["worldItems"]}
           getDescription={state["getDescription"]}
           getImages={state["getImages"]}
+          
         />
         <Navigation currentSheet={state["currentSheet"]} />
       </div>

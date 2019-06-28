@@ -25,7 +25,7 @@ export default function VideoBox({
 
   return (
     <div className= {`video-box ${boxHeight}`}>
-      {getImages == "true" ? (
+      {getImages === "true" ? (
         !thumbnailState.showThumbnail ? (
           <div className="iframe-container">
             <iframe
@@ -62,7 +62,7 @@ export default function VideoBox({
           ▶ {title}
         </div>
         <div className="word-description">
-          {getNeatDescription(description)}
+          {description === null || description === undefined? "": getNeatDescription(description)}
         </div>
       </div>
     </div>

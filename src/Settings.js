@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "./App";
-import "./App.css";
+import "./settings.css";
 
 export default function Settings({
   offPhraseList,

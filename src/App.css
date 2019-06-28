@@ -1,17 +1,80 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins|Roboto|Roboto:500|Poppins:500|Playfair+Display|Playfair+Display:700|Playfair+Display:900");
-html,
+@import url("https://fonts.googleapis.com/css?family=Playfair+Display|Playfair+Display:700|Playfair+Display:900");
+/* html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
-  background-color: #eceff1;
-}
-/* #root{
-  height: 100%;
+  
 } */
+#root-loading{
+  display: none;
+}
 .App{
   height: 100%;
 }
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 27px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  background: black;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 6px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 6px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 26px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 45px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
+}
+
+
+
+
+
+
 iframe{
   border:0;
 }
@@ -82,16 +145,6 @@ iframe{
 .dark-theme-app .nav-active{
   color: #2962FF;
 }
-
-/*Setting*/
-.OP-button {
-  display: inline-block;
-  border: 1px solid red;
-  margin: 0 4px;
-
-}
-
-/*End Settings*/
 
 .single-box,
 .match-box,
@@ -201,9 +254,6 @@ width: 100%;
   position: relative;
   /* overflow: hidden; */
 }
-.video-box {
-  /* padding: 4px; */
-}
 .youtube-iframe {
   height: 100%;
   width: 100%;
@@ -267,35 +317,4 @@ width: 100%;
   white-space: normal;
 }
 
-.setting-box{
-  border-bottom: 1px solid grey;
-  margin: 9px 0;
-  padding-bottom: 4px;
-  /* border: 1px solid chartreuse; */
-}
 
-.light-theme-app .setting-box{
-  color: #263238;
-}
-.dark-theme-app .setting-box{
-  color: #ECEFF1;
-}
-.setting-label{
-  display: inline;
-  font-size: 18px;
-  
-}
-.setting-desc{
-  font-size: 13px;
-  
-}
-.setting-box > input{
-  display: inline;
-  /* float: right; */
-}
-.setting-box > .setting-checkbox{
-  /* display: inline; */
-  float: right;
-  font-size: 99px;
-  margin-right: 11px;
-}

@@ -1,11 +1,13 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import Navigation from "./Navigation.js";
 import Sheet from "./Sheet.js";
 import "./App.css";
-//import { stat } from "fs";
 
 function appReducer(state, action) {
   switch (action.type) {
+    case "fromLocalStorage": {
+      return { ...state, ...action.payload };
+    }
     case "changeSheet": {
       return { ...state, currentSheet: action.payload };
     }
@@ -24,16 +26,6 @@ function appReducer(state, action) {
         ...state,
         offPhraseList: state.offPhraseList.filter(p => p !== action["payload"])
       };
-    }
-    case "changeSheetItems": {
-      if (action.payload["sheet"] === "WORLD") {
-        return {
-          ...state,
-          worldItems: action.payload.items
-        };
-      } else {
-        return state;
-      }
     }
     case "toggleDescription": {
       if (action.payload === undefined)
@@ -99,109 +91,50 @@ export default function App() {
   const [state, dispatch] = useReducer(appReducer, {
     currentSheet: " ",
     offPhraseList: [],
-
     getAMP: "true",
     darkTheme: "false",
     getImages: "false",
-    getDescription: "true"
+    getDescription: "false"
   });
 
   useEffect(() => {
-    if (localStorage.getItem("currentSheet") === null) {
+    if (localStorage.getItem("globalState") === null) {
       dispatch({ type: "changeSheet", payload: "WORLD" });
     } else {
       dispatch({
-        type: "changeSheet",
-        payload: localStorage.getItem("currentSheet")
-      });
-
-      dispatch({
-        type: "toggleImages",
-        payload: localStorage.getItem("getImages")
-      });
-
-      dispatch({
-        type: "toggleDescription",
-        payload: localStorage.getItem("getDescription")
-      });
-
-      dispatch({
-        type: "toggleAMP",
-        payload: localStorage.getItem("getAMP")
-      });
-
-      dispatch({
-        type: "toggleDarkTheme",
-        payload: localStorage.getItem("darkTheme")
-      });
-      if (localStorage.getItem("offPhraseList").length > 0)
-        localStorage
-          .getItem("offPhraseList")
-          .split("&&&")
-          .forEach(OP => {
-            dispatch({ type: "addOffPhrase", payload: OP });
-          });
+        type:"fromLocalStorage",
+        payload:JSON.parse(localStorage.getItem("globalState"))
+      })
+     
     }
   }, []);
 
   useEffect(() => {
-    if (state["currentSheet"] === "WORLD") {
-      //let queryString = `http://localhost:2345/graphql?query=query
-      let queryString = `https://lw-back.glitch.me/graphql?query=query
-      {
-        articles(offPhrases:${JSON.stringify(state["offPhraseList"])}) {
-          title
-          ${state["getAMP"] === "true" ? "ampURL" : "url"}
-          ${state["getImages"] === "true" ? "image" : ""}
-          publisher
-          uid
-          minutesPassed
-          publisher
-          ${state["getDescription"] === "true" ? "description" : ""}
-          displayTime
-          type
-          matchid
-        }
-      }`;
-      console.log(queryString);
-
-      fetch(queryString)
-        .then(res => res.json())
-        .then(worldItems => {
-          dispatch({
-            type: "changeSheetItems",
-            payload: {
-              sheet: "WORLD",
-              items: worldItems["data"]["articles"]
-            }
-          });
-        });
-    } // end of if (state["currentSheet"] === "WORLD") {
-  }, [state["currentSheet"]]);
-
-  useEffect(() => {
     console.log(`${JSON.stringify(state)} 👈 latest global state`);
-    localStorage.setItem("currentSheet", state["currentSheet"]);
-    localStorage.setItem("getAMP", state["getAMP"]);
-    localStorage.setItem("darkTheme", state["darkTheme"]);
-    localStorage.setItem("getImages", state["getImages"]);
-    localStorage.setItem("getDescription", state["getDescription"]);
-    localStorage.setItem("offPhraseList", state["offPhraseList"].join("&&&"));
+    localStorage.setItem("globalState", JSON.stringify(state))
   }, [state]);
-
+  console.log(`${state['currentSheet']} 👈 state cs`);
+  
   return (
-    <Context.Provider value={dispatch}>
+    <Context.Provider value={dispatch} style={{height:'100%'}}>
       <div className= {`App ${state['darkTheme'] == 'true'? 'dark-theme-app' : 'light-theme-app'}`}>
-        <Sheet
+      <div className= "top-box" >
+          {state['currentSheet']}
+        </div>
+        {state['currentSheet'] == " "? <div className="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>: <Sheet
           currentSheet={state["currentSheet"]}
           offPhraseList={state["offPhraseList"]}
           getAMP={state["getAMP"]}
           darkTheme={state["darkTheme"]}
-          worldItems={state["worldItems"]}
           getDescription={state["getDescription"]}
           getImages={state["getImages"]}
-          
-        />
+        />}
+        
         <Navigation currentSheet={state["currentSheet"]} />
       </div>
     </Context.Provider>

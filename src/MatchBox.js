@@ -14,8 +14,8 @@ export default function MatchBox({ matchList, getDescription, getImages, darkThe
           link={word["url"] === undefined ? word["ampURL"] : word["url"]}
           description={word["description"]}
           publisher={word["publisher"]}
-          minutesPassed={word["minutesPassed"]}
           boxHeight={boxHeight}
+          displayTime={word['displayTime']}
           key={word["uid"]}
         />
       );

@@ -1,0 +1,45 @@
+/*Setting*/
+.OP-button {
+    display: inline-block;
+    border: 1px solid red;
+    margin: 0 4px;
+  
+  }
+  
+  
+  
+  .setting-box{
+    border-bottom: 1px solid grey;
+    margin: 9px 0;
+    padding-bottom: 4px;
+    /* border: 1px solid chartreuse; */
+  }
+  
+  
+  
+  
+  .light-theme-app .setting-box{
+    color: #263238;
+  }
+  .dark-theme-app .setting-box{
+    color: #ECEFF1;
+  }
+  .setting-label{
+    display: inline;
+    font-size: 18px;
+    
+  }
+  .setting-desc{
+    font-size: 13px;
+    
+  }
+  .setting-box > input{
+    display: inline;
+    /* float: right; */
+  }
+  .setting-box > .setting-checkbox{
+    /* display: inline; */
+    float: right;
+    font-size: 99px;
+    margin-right: 11px;
+  }

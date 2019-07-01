@@ -52,7 +52,7 @@ export default function VideoBox({
         <div className="word-time">{displayTime}</div>
       </div>
 
-      <div className="row-three">
+      {/* <div className="row-three"> */}
         <div
           className="word-title"
           onClick={() =>
@@ -64,7 +64,7 @@ export default function VideoBox({
         <div className="word-description">
           {description === null || description === undefined? "": getNeatDescription(description)}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 }

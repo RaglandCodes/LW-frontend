@@ -88,7 +88,7 @@ export default function Settings({
         <div className="setting-desc">
           Use this option if you aren't interested in a particular topic. News
           articles containing the words you enter in titles/description will not
-          be shown
+          be shown.
         </div>
       </div>
       <div className="setting-box">
@@ -100,7 +100,7 @@ export default function Settings({
           onChange={() => dispatch({ type: "toggleImages" })}
         />
         <div className="setting-desc">
-          Leaving this unchecked will not show images or video previews
+          Leaving this unchecked will not show images or video previews. 
         </div>
       </div>
       <div className="setting-box">
@@ -122,7 +122,7 @@ export default function Settings({
         />
         <div className="setting-desc">
           Checking this will get you the AMP link of the story when available.
-          AMP pages tend to load faster. Most browsers provide a way to revert
+          AMP pages tend to load faster ⚡. Most browsers and publishers provide a way to revert
           to the full page from the AMP page.
         </div>
       </div>

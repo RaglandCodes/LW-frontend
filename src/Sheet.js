@@ -14,7 +14,6 @@ export default function Sheet({
   getImages
 }) {
   console.log(`${currentSheet} 👈 currentSheet`);
-  
 
   if (currentSheet === "SETTINGS") {
     return (
@@ -32,14 +31,15 @@ export default function Sheet({
       </div>
     );
   } else {
-    const [render1, set1] = useState(<div class="lds-ellipsis">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>);
-      const [render2, set2] = useState();
-
+    const [render1, set1] = useState(
+      <div className="lds-ellipsis">
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
+    );
+    const [render2, set2] = useState();
 
     useEffect(() => {
       console.log("in c mount use effect", currentSheet);
@@ -53,11 +53,12 @@ export default function Sheet({
       }
 
       if (currentSheet === "WORLD" || currentSheet === "TECH") {
-        //let queryString = `https://lw-back.glitch.me/graphql?query=query
-        let queryString = `http://localhost:2345/graphql?query=query
-        
+        //let queryString = `http://localhost:2345/graphql?query=query
+        let queryString = `https://lw-back.glitch.me/graphql?query=query
         {
-          articles(offPhrases:${JSON.stringify(offPhraseList)}, domain:"${currentSheet.toLowerCase()}") {
+          articles(offPhrases:${JSON.stringify(
+            offPhraseList
+          )}, domain:"${currentSheet.toLowerCase()}") {
             title
             ${getAMP === "true" ? "ampURL" : "url"}
             ${getImages === "true" ? "image" : ""}
@@ -70,21 +71,25 @@ export default function Sheet({
           }
         }`;
         console.log(queryString);
-        
-        
+
         fetch(queryString)
           .then(res => res.json())
           .then(newsItems => newsItems["data"]["articles"])
           .then(newsArticles => {
-            
             if (newsArticles !== undefined) {
               let matchedItems = newsArticles.filter(w => w["matchid"] !== "0");
               let uniqueMatchIDs = [
                 ...new Set(matchedItems.map(w => w["matchid"]))
               ];
+              let strayMatchIems = [];
               let renderMatchedItems = [];
               for (const id of uniqueMatchIDs) {
                 let thisItmes = matchedItems.filter(w => w["matchid"] === id);
+                if (thisItmes.length === 1) {
+                  strayMatchIems.push(matchedItems.find(w => w['matchid'] === id))
+                  continue;
+                }
+
                 renderMatchedItems.push(
                   <MatchBox
                     matchList={thisItmes}
@@ -97,9 +102,12 @@ export default function Sheet({
                 );
               }
               set1(renderMatchedItems);
-              return(newsArticles.filter(w => w["matchid"] === "0"))
+              console.log(`${strayMatchIems.length} 👈 len starys`);
+              
+              return strayMatchIems.concat(newsArticles.filter(w => w["matchid"] === "0"));
             }
-          }).then(singleItems => {
+          })
+          .then(singleItems => {
             let renderSingleItems = singleItems.map(word => {
               if (word["type"] === "text") {
                 return (
@@ -132,10 +140,20 @@ export default function Sheet({
               }
             });
             set2(renderSingleItems);
+          })
+          .catch(err => {
+            set1(
+              <div style={{color:'red', textAlign:'center'}}>
+                An error occured 😢
+                <br />
+                Please try refreshing and check your internet connection
+                <br />
+                
+              </div>
+            );
           });
       } // end of if (state["currentSheet"] === "WORLD") {
     }, [currentSheet]);
-
 
     return (
       <div>

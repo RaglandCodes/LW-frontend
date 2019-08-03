@@ -1,6 +1,6 @@
 # LitteWord
 
-This is the front end part for the LittleWord news app
+This is the front end part for the LittleWord news app. See it live [here](https://littleword.netlify.com/)
 
 ## What's new
 - 🌓 Dark Theme

@@ -1,6 +1,7 @@
 # LitteWord
 
 This is the front end part for the LittleWord news app. See it live [here](https://littleword.netlify.com/)
+Check out the backend [here](https://github.com/RaglandCodes/LW-backend)
 
 ## What's new
 - 🌓 Dark Theme
@@ -10,8 +11,9 @@ This is the front end part for the LittleWord news app. See it live [here](https
 
 ## Coming Soon
 
+- Better UI for PC
 - Improve settings UI
 - Descriptions for video
 - Improve the matching algorithm
 - More pleasent scrolling
-- Better PC UI
+

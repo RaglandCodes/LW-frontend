@@ -1,3 +1,10 @@
+This is archived. Please see - 
+- [Wiki](https://github.com/RaglandCodes/LW-frontend/wiki)
+
+- [V1](https://github.com/RaglandCodes/lw1)
+
+- [V3](https://github.com/RaglandCodes/LW-Line-frontend)
+
 # LitteWord
 
 This is the front end part for the LittleWord news app. See it live [here](https://littleword.netlify.com/)
